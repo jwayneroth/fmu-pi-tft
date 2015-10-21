@@ -6,6 +6,7 @@ import time
 import tftutils
 import fmu
 import camera
+import subprocess
 
 os.environ["SDL_FBDEV"] = "/dev/fb1"
 
@@ -27,11 +28,10 @@ class TFT:
 		self.other_btn_color = (52,178,237)
 		self.other_btn_highlight_color = (249, 176, 72)
 		
-		
 		self.app_state = 0
 		self.menu_state = 0
 		
-		self.screen_size = (320,240)
+		self.screen_size = (480,320)
 		self.screen = pygame.display.set_mode(self.screen_size, 0, 32)
 		self.background = pygame.Surface(self.screen_size)
 		self.background.convert()
@@ -47,12 +47,14 @@ class TFT:
 		
 		self.menu_array = [
 			{'title':'FMU', 'app':self.fmu},
-			{'title':'PiCamera', 'app':self.camera}
+			#{'title':'PiCamera', 'app':self.camera}
+			{'title':'reboot', 'app':''},
+			{'title':'shutdown', 'app':''}
 		]
 		
 		self.current_app = None
 		
-		self.btns = tftutils.BTNS()
+		self.btns = tftutils.BTNS(330,170)
 		self.btns.change += self.on_button_change
 		
 		self.screensaver = tftutils.TFTScreensaver((0,0), self.screen_size)
@@ -103,7 +105,12 @@ class TFT:
 		self.menu_state = menu
 	
 		if self.app_state == 1:
-			self.start_current_app()
+			if self.menu_array[menu]['title'] == 'reboot':
+				subprocess.Popen('sudo shutdown -r now', shell=True, stdout=subprocess.PIPE)
+			if self.menu_array[menu]['title'] == 'shutdown':
+				subprocess.Popen('sudo shutdown -h now', shell=True, stdout=subprocess.PIPE)
+			else:
+				self.start_current_app()
 		else:
 			self.update_menu()
 	
@@ -154,6 +161,7 @@ class TFT:
 			else:
 				current_app = self.menu_array[self.menu_state]
 				self.background.blit(self.current_app.update_surface(), [0,0])
+			self.background.blit(self.btns.updateSurface(), (330,170))
 		else:
 			if self.current_app == self.fmu:
 				self.background.blit(self.current_app.update_surface(), [0,0])
@@ -171,6 +179,7 @@ class TFT:
 		while True:
 			try:
 				for event in pygame.event.get():
+					self.btns.process_mouse_event(event)
 					if event.type == pygame.QUIT:
 						self.close()
 				self.update_surface()

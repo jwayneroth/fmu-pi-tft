@@ -4,6 +4,8 @@ import time
 import thread
 import random
 import RPi.GPIO as GPIO
+from gui_widgets import *
+from settings import *
 
 #
 # TFTApp
@@ -293,40 +295,29 @@ class GestureDetector(object):
 # handles pygame mouse events
 #                     
 class BTNS:
-	def __init__(self):
+	def __init__(self, x, y):
+		self.x_pos = x
+		self.y_pos = y
 		self.gesture_detect = GestureDetector()
-		self.sur = pygame.Surface((100,100));
-		self.buttons = [
-			{'pin':4, 'dir':'left'},
-			{'pin':22, 'dir':'right'},
-			{'pin':17, 'dir':'up'},
-			{'pin':21, 'dir':'down'},
-			{'pin':23, 'dir':'center'}
-		]
+		self.sur = pygame.Surface((150,150), pygame.SRCALPHA, 32)
 		self.change = EventHook()
 		self.renderButtons()
-		#self.startListener()
+		
+	def updateSurface(self):
+		return self.sur
 		
 	def renderButtons(self):
-		color = (200,100,120)
-		sx = 200
-		sy = 180
-		# up
-		pygame.draw.line(self.sur, color, [sx,sy+5],[sx+9,sy+5], 2)
-		pygame.draw.line(self.sur,  color, [sx+4,sy+1],[sx+4,sy+10], 2)
-		# down
-		pygame.draw.line(self.sur, color, [sx,sy+5],[sx+10,sy+5], 2)
-	
-	def startListener(self):
-		try:
-			thread.start_new_thread( self.check_buttons, ())
-		except:
-		   print "Error: BTNS unable to start thread"
-	
-	def check_buttons(self):
-		while 1:
-			continue
-			   
+		self.up = ButtonIcon('btn_up', self.sur, RESOURCES + 'button.png', 50, 0)
+		self.down = ButtonIcon('btn_down', self.sur, RESOURCES + 'button.png', 50, 100)
+		self.left = ButtonIcon('btn_left', self.sur, RESOURCES + 'button.png', 0, 50)
+		self.right = ButtonIcon('btn_right', self.sur, RESOURCES + 'button.png', 100, 50)
+		self.center = ButtonIcon('btn_center', self.sur, RESOURCES + 'button.png', 50, 50)
+		self.up.draw();
+		self.down.draw();
+		self.left.draw();
+		self.right.draw();
+		self.center.draw();
+		
 	def process_mouse_event(self, event):
 		
 		if event.type != pygame.MOUSEBUTTONDOWN and event.type != pygame.MOUSEBUTTONDOWN:
@@ -336,11 +327,26 @@ class BTNS:
 		
 		x = self.gesture_detect.x_start
 		y = self.gesture_detect.y_start
-
+		
 		if gesture == GESTURE_CLICK: 
-			# check for hit here
-			self.change.fire('left')
-			
+			if x >= self.x_pos and y >= self.y_pos:
+				x = x - self.x_pos
+				y = y - self.y_pos
+				# print "x: {} y: {}".format(x,y)
+				if x <= 50:
+					if y > 50 and y <= 100:
+						self.change.fire('left')
+				elif x <= 100:
+					if y <= 50:
+						self.change.fire('up')
+					elif y <= 100:
+						self.change.fire('center')
+					else:
+						self.change.fire('down')
+				else:
+					if y > 50 and y <= 100:
+						self.change.fire('right')
+						
 		#if gesture == GESTURE_SWIPE_LEFT and self.current_index - 1 >= 0:
 			
 		#if gesture == GESTURE_SWIPE_RIGHT and self.current_index + 1 < len(self.screen_list):

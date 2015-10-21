@@ -7,6 +7,7 @@ import re
 import feedparser
 import tftutils
 import mpc
+from settings import *
 #
 # FMUApp Class
 # inherits from TFTApp
@@ -58,7 +59,7 @@ class FMUApp():#TFTApp):
 		self.back_highlight_color = other_highlight_col
 		
 		self.menu_height = 98
-		self.menu_width = 160
+		self.menu_width = SCREEN_WIDTH
 		self.menu_font_size = 16
 		self.menu_line_height = 17
 		self.menu_font = pygame.font.Font('/home/pi/fonts/FUTURA_N.TTF', self.menu_font_size) 
@@ -70,7 +71,7 @@ class FMUApp():#TFTApp):
 		#self.screensaver = tftutils.TFTScreensaver((self.menu_width, self.menu_height))
 		#self.screensaver.fire += self.on_screensaver_fire
 		
-		self.fmu_scroll = FMUScroll(160, self.scroll_color)
+		self.fmu_scroll = FMUScroll(SCREEN_WIDTH, self.scroll_color)
 		self.mpc = mpc.MPC()
 		self.mpc.change += self.on_mpc_change
 		
@@ -242,7 +243,7 @@ class FMUApp():#TFTApp):
 		for i in range( len(self.menu_array) - 1 ):
 			option_name = self.menu_array[i+1]['title']
 			if i + 1 == self.menu_state:
-				self.menu.fill((0,0,0), (0, ypos, 160, self.menu_line_height ))
+				self.menu.fill((0,0,0), (0, ypos, SCREEN_WIDTH, self.menu_line_height ))
 				sur = self.menu_font.render(option_name, 1, self.highlight_color)
 			else:
 				sur = self.menu_font.render(option_name, 1, self.menu_color)
@@ -271,7 +272,7 @@ class FMUApp():#TFTApp):
 			option_name = sub_menu[page * options_per_page + i]['title']
 			
 			if i == active_index and self.back_button == False:
-				self.menu.fill((0,0,0),(0,ypos,160, self.menu_line_height))
+				self.menu.fill((0,0,0),(0,ypos,SCREEN_WIDTH, self.menu_line_height))
 				sur = self.menu_font.render(option_name, 1, self.highlight_color)
 			else:
 				sur = self.menu_font.render(option_name, 1, self.menu_color)
@@ -286,7 +287,7 @@ class FMUApp():#TFTApp):
 	#
 	def render_main_controls(self):
 		if self.menu_state == 0:
-			self.menu.fill((0,0,0),(0,0,160,self.menu_line_height))
+			self.menu.fill((0,0,0),(0,0,SCREEN_WIDTH,self.menu_line_height))
 		startx = 5
 		starty = 3
 		menu = self.menu_state
@@ -350,7 +351,7 @@ class FMUApp():#TFTApp):
 	def render_volume(self, sy):
 		volume = self.mpc.get_volume()
 		surface = self.menu_font.render(volume, 1, self.back_btn_color)
-		self.menu.blit( surface, (160 - surface.get_width() - 3, sy) )
+		self.menu.blit( surface, (SCREEN_WIDTH - surface.get_width() - 3, sy) )
 	
 	def render_sub_controls(self):
 		sy = 84
@@ -440,7 +441,7 @@ class FMUScroll:
 		self.text_color = color
 		self.bg_color = (0,0,0);
 		self.surface = self.font.render(self.text, 1, self.text_color)
-		self.display_rect = (0,0,160,30)
+		self.display_rect = (0,0,SCREEN_WIDTH,30)
 		self.text_rect = self.surface.get_rect()
 		
 		self.start_scroll_thread()
@@ -463,4 +464,4 @@ class FMUScroll:
 			self.xpos -= 1
 			if self.xpos <= -self.text_rect.right:
 				self.xpos = self.startx
-			time.sleep(.008)
+			time.sleep(.012)
