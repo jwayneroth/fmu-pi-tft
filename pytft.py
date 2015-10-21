@@ -171,7 +171,7 @@ class TFT:
 		while True:
 			try:
 				for event in pygame.event.get():
-					if event.type == QUIT:
+					if event.type == pygame.QUIT:
 						self.close()
 				self.update_surface()
 				time.sleep(.005)

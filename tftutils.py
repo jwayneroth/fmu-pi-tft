@@ -205,11 +205,122 @@ class TFTScreensaver:
 	def reset(self):
 		self.cnt = 0
 
+GESTURE_MOVE_MIN = 50  # Minimum movement in pixels to call it a move
+GESTURE_CLICK_MAX = 15  # Maximum movement in pixels to call it a click
+GESTURE_PRESS_MIN = 500  # Minimum time to call a click a long press
+# Gesture enumeration
+GESTURE_NONE = -1
+GESTURE_CLICK = 0
+GESTURE_SWIPE_LEFT = 1
+GESTURE_SWIPE_RIGHT = 2
+GESTURE_SWIPE_UP = 3
+GESTURE_SWIPE_DOWN = 4
+GESTURE_LONG_PRESS = 5
+GESTURE_DRAG_VERTICAL = 6
+GESTURE_DRAG_HORIZONTAL = 7
+
+class GestureDetector(object):
+	
+	def __init__(self):
+		self.gesture = GESTURE_NONE
+		self.x_start = 0
+		self.y_start = 0
+		self.x_moved = 0
+		self.y_moved = 0
+		self.drag_length = 0
+		self.press_duration = 0
+		self.x_start, self.y_start = pygame.mouse.get_pos()
+
+	def capture_gesture(self, event):
+		if event.type != pygame.MOUSEBUTTONDOWN:
+			return GESTURE_NONE
+
+		gesture_ended = False
+
+		mouse_down_time = pygame.time.get_ticks()  # Start timer to detect long mouse clicks
+		self.x_start, self.y_start = pygame.mouse.get_pos()  # Get click position (= start position for swipe)
+		pygame.mouse.get_rel()  # Start tracking mouse movement
+		mouse_down_time = pygame.time.get_ticks()
+
+		while not gesture_ended:
+			for event in pygame.event.get():
+
+				if event.type == pygame.MOUSEBUTTONUP:  # Gesture end
+					self.press_duration = pygame.time.get_ticks() - mouse_down_time
+					self.x_moved, self.y_moved = pygame.mouse.get_rel()  # Movements since start gesture
+					self.gesture = self.__determine_gesture_type()  # Determines the kind of gesture used
+					gesture_ended = True
+
+		return self.gesture
+
+	def __determine_gesture_type(self):
+		x = self.x_moved
+		y = self.y_moved
+		if self.press_duration < GESTURE_PRESS_MIN:
+			if abs(x) <= GESTURE_MOVE_MIN:
+				if abs(y) <= GESTURE_MOVE_MIN:
+					if abs(x) < GESTURE_CLICK_MAX and abs(y) < GESTURE_CLICK_MAX:
+						return GESTURE_CLICK  # Tap (click)
+					else:
+						return -1  # No idea what the user did
+				elif y > GESTURE_MOVE_MIN:  # Down swipe
+					return GESTURE_SWIPE_DOWN
+				elif y < -GESTURE_MOVE_MIN:  # Up swipe
+					return GESTURE_SWIPE_UP
+			elif abs(y) <= GESTURE_MOVE_MIN:
+				if x > GESTURE_MOVE_MIN:  # Left swipe
+					return GESTURE_SWIPE_LEFT
+				elif x < -GESTURE_MOVE_MIN:  # Right swipe
+					return GESTURE_SWIPE_RIGHT
+		elif self.press_duration >= GESTURE_PRESS_MIN:
+			if abs(x) <= GESTURE_MOVE_MIN:
+				if abs(y) <= GESTURE_MOVE_MIN:
+					if abs(x) < GESTURE_CLICK_MAX and abs(y) < GESTURE_CLICK_MAX:
+						return GESTURE_LONG_PRESS  # Long press
+					else:
+						return -1  # No idea what the user did
+				elif abs(y) > GESTURE_MOVE_MIN:
+					return GESTURE_DRAG_VERTICAL  # Vertical drag
+			elif abs(y) <= GESTURE_MOVE_MIN:
+				if abs(x) > GESTURE_MOVE_MIN:
+					return GESTURE_DRAG_HORIZONTAL  # Horizontal drag
+		else:
+			pass
+			return GESTURE_NONE
+
 #
 # BTNS Class
-# maintains a thread checking GPIO buttons
+# handles pygame mouse events
 #                     
 class BTNS:
+	def __init__(self):
+		self.gesture_detect = GestureDetector()
+		
+	def process_mouse_event(self, event):
+		
+		if event.type != pygame.MOUSEBUTTONDOWN and event.type != pygame.MOUSEBUTTONDOWN:
+			return None
+		
+		gesture = self.gesture_detect.capture_gesture(event)
+		
+		x = self.gesture_detect.x_start
+		y = self.gesture_detect.y_start
+
+		if gesture == GESTURE_CLICK: 
+			
+			
+		#if gesture == GESTURE_SWIPE_LEFT and self.current_index - 1 >= 0:
+			
+		#if gesture == GESTURE_SWIPE_RIGHT and self.current_index + 1 < len(self.screen_list):
+		
+		#if gesture == GESTURE_SWIPE_UP or gesture == GESTURE_SWIPE_DOWN:
+			
+		
+#
+# BTNS_GPIO Class
+# maintains a thread checking GPIO buttons
+#                     
+class BTNS_GPIO:
 	def __init__(self):
 		
 		GPIO.setmode(GPIO.BCM)
