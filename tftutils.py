@@ -307,7 +307,7 @@ class BTNS:
 		y = self.gesture_detect.y_start
 
 		if gesture == GESTURE_CLICK: 
-			
+			# check for hit here
 			
 		#if gesture == GESTURE_SWIPE_LEFT and self.current_index - 1 >= 0:
 			
