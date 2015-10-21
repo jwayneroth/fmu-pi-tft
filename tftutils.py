@@ -295,7 +295,38 @@ class GestureDetector(object):
 class BTNS:
 	def __init__(self):
 		self.gesture_detect = GestureDetector()
+		self.sur = pygame.Surface((100,100));
+		self.buttons = [
+			{'pin':4, 'dir':'left'},
+			{'pin':22, 'dir':'right'},
+			{'pin':17, 'dir':'up'},
+			{'pin':21, 'dir':'down'},
+			{'pin':23, 'dir':'center'}
+		]
+		self.change = EventHook()
+		self.renderButtons()
+		#self.startListener()
 		
+	def renderButtons(self):
+		color = (200,100,120)
+		sx = 200
+		sy = 180
+		# up
+		pygame.draw.line(self.sur, color, [sx,sy+5],[sx+9,sy+5], 2)
+		pygame.draw.line(self.sur,  color, [sx+4,sy+1],[sx+4,sy+10], 2)
+		# down
+		pygame.draw.line(self.sur, color, [sx,sy+5],[sx+10,sy+5], 2)
+	
+	def startListener(self):
+		try:
+			thread.start_new_thread( self.check_buttons, ())
+		except:
+		   print "Error: BTNS unable to start thread"
+	
+	def check_buttons(self):
+		while 1:
+			continue
+			   
 	def process_mouse_event(self, event):
 		
 		if event.type != pygame.MOUSEBUTTONDOWN and event.type != pygame.MOUSEBUTTONDOWN:
@@ -308,6 +339,7 @@ class BTNS:
 
 		if gesture == GESTURE_CLICK: 
 			# check for hit here
+			self.change.fire('left')
 			
 		#if gesture == GESTURE_SWIPE_LEFT and self.current_index - 1 >= 0:
 			

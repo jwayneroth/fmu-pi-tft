@@ -31,7 +31,7 @@ class TFT:
 		self.app_state = 0
 		self.menu_state = 0
 		
-		self.screen_size = (160,128)
+		self.screen_size = (320,240)
 		self.screen = pygame.display.set_mode(self.screen_size, 0, 32)
 		self.background = pygame.Surface(self.screen_size)
 		self.background.convert()
