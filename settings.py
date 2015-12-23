@@ -39,7 +39,7 @@ else:
 RESOURCES = os.path.dirname(__file__) + '/resources/'
 
 #: Standard font type
-FONT = pygame.font.Font('/home/pi/fonts/FUTURA_N.TTF', 16) # pygame.font.Font(RESOURCES + 'DroidSans.ttf', 14)
+FONT = pygame.font.Font('/home/jwr/fonts/FUTURA_N.TTF', 16) # pygame.font.Font(RESOURCES + 'DroidSans.ttf', 14)
 
 
 """ Color definitions """

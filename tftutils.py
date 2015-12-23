@@ -3,7 +3,7 @@ import pygame
 import time
 import thread
 import random
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 from gui_widgets import *
 from settings import *
 
@@ -27,7 +27,7 @@ class TFTApp():
 
 		self.menu_font_size = 16
 		self.menu_line_height = 17
-		self.menu_font = pygame.font.Font('/home/pi/fonts/FUTURA_N.TTF', self.menu_font_size) 
+		self.menu_font = pygame.font.Font('/home/jwr/fonts/FUTURA_N.TTF', self.menu_font_size) 
 		self.menu = pygame.Surface(self.size)
 		self.menu_updated = True
 		
@@ -141,7 +141,7 @@ class TFTScreensaver:
 		self.increment = .5
 		self.trigger = 60
 		self.surface = pygame.Surface(self.size)
-		self.img = pygame.image.load('/home/pi/pydocs/pytft/raspberrypi_logo.gif')
+		self.img = pygame.image.load('/home/jwr/pydocs/pytft/raspberrypi_logo.gif')
 		self.img_rect = self.img.get_rect()
 		
 	def start(self):
@@ -358,34 +358,34 @@ class BTNS:
 # BTNS_GPIO Class
 # maintains a thread checking GPIO buttons
 #                     
-class BTNS_GPIO:
-	def __init__(self):
-		
-		GPIO.setmode(GPIO.BCM)
-		
-		self.change = EventHook()
-		self.buttons = [
-			{'pin':4, 'dir':'left'},
-			{'pin':22, 'dir':'right'},
-			{'pin':17, 'dir':'up'},
-			{'pin':21, 'dir':'down'},
-			{'pin':23, 'dir':'center'}
-		]
-		for btn in self.buttons:
-			GPIO.setup( btn['pin'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		
-		self.startListener()
-			
-	def startListener(self):
-		try:
-			thread.start_new_thread( self.check_buttons, ())
-		except:
-		   print "Error: BTNS unable to start thread"
-
-	def check_buttons(self):
-		while 1:
-			for btn in self.buttons:
-				if GPIO.input(btn['pin']):
-					self.change.fire(btn['dir'])
-					time.sleep(.2)
-					break
+#class BTNS_GPIO:
+#	def __init__(self):
+#		
+#		#GPIO.setmode(GPIO.BCM)
+#		
+#		self.change = EventHook()
+#		self.buttons = [
+#			{'pin':4, 'dir':'left'},
+#			{'pin':22, 'dir':'right'},
+#			{'pin':17, 'dir':'up'},
+#			{'pin':21, 'dir':'down'},
+#			{'pin':23, 'dir':'center'}
+#		]
+#		#for btn in self.buttons:
+#			GPIO.setup( btn['pin'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+#		
+#		self.startListener()
+#			
+#	def startListener(self):
+#		try:
+#			thread.start_new_thread( self.check_buttons, ())
+#		except:
+#		   print "Error: BTNS unable to start thread"
+#
+#	def check_buttons(self):
+#		while 1:
+#			for btn in self.buttons:
+#				if GPIO.input(btn['pin']):
+#					self.change.fire(btn['dir'])
+#					time.sleep(.2)
+#					break

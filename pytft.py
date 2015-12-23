@@ -8,7 +8,7 @@ import fmu
 import camera
 import subprocess
 
-os.environ["SDL_FBDEV"] = "/dev/fb1"
+#os.environ["SDL_FBDEV"] = "/dev/fb1"
 
 #
 # TFT Class
@@ -18,7 +18,7 @@ class TFT:
 	
 	def __init__(self):
 		pygame.init()
-		pygame.mouse.set_visible(False)
+		#pygame.mouse.set_visible(False)
 		pygame.display.set_caption('Basic Pygame program')
 		
 		self.menu_color = (241, 66, 198)
@@ -38,7 +38,7 @@ class TFT:
 		
 		self.menu_font_size = 16
 		self.menu_line_height = 17
-		self.menu_font = pygame.font.Font('/home/pi/fonts/FUTURA_N.TTF', self.menu_font_size) 
+		self.menu_font = pygame.font.Font('/home/jwr/fonts/FUTURA_N.TTF', self.menu_font_size) 
 		self.menu = pygame.Surface(self.screen_size)
 		self.menu_updated = True
 		

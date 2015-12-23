@@ -62,7 +62,7 @@ class FMUApp():#TFTApp):
 		self.menu_width = SCREEN_WIDTH
 		self.menu_font_size = 16
 		self.menu_line_height = 17
-		self.menu_font = pygame.font.Font('/home/pi/fonts/FUTURA_N.TTF', self.menu_font_size) 
+		self.menu_font = pygame.font.Font('/home/jwr/fonts/FUTURA_N.TTF', self.menu_font_size) 
 		self.menu = pygame.Surface((self.menu_width, self.menu_height))
 		
 		self.menu_updated = False
@@ -436,7 +436,7 @@ class FMUApp():#TFTApp):
 class FMUScroll:
 	def __init__(self, xpos, color):
 		self.xpos = self.startx = xpos
-		self.font = pygame.font.Font('/home/pi/fonts/FrutiIta.ttf', 20) 
+		self.font = pygame.font.Font('/home/jwr/fonts/FrutiIta.ttf', 20) 
 		self.text = ''
 		self.text_color = color
 		self.bg_color = (0,0,0);
