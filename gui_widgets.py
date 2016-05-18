@@ -47,7 +47,7 @@ class Widget(object):
         self.outline_visible = False
         self.outline_color = WHITE
         self.background_color = BLACK
-        self.font = FONT
+        self.font = pygame.font.Font('/home/pi/fonts/FUTURA_N.TTF', 16) #FONT
         self.font_color = FIFTIES_YELLOW
         self.font_height = self.font.size('Tg')[1]
 

@@ -8,7 +8,9 @@ import fmu
 import camera
 import subprocess
 
-#os.environ["SDL_FBDEV"] = "/dev/fb1"
+os.environ["SDL_FBDEV"] = "/dev/fb1"
+#os.environ['SDL_MOUSEDEV'] = '/dev/input/touchscreen'
+#os.environ['SDL_MOUSEDRV'] = 'TSLIB'
 
 #
 # TFT Class
@@ -18,7 +20,7 @@ class TFT:
 	
 	def __init__(self):
 		pygame.init()
-		#pygame.mouse.set_visible(False)
+		pygame.mouse.set_visible(False)
 		pygame.display.set_caption('Basic Pygame program')
 		
 		self.menu_color = (241, 66, 198)
@@ -38,7 +40,7 @@ class TFT:
 		
 		self.menu_font_size = 16
 		self.menu_line_height = 17
-		self.menu_font = pygame.font.Font('/home/jwr/fonts/FUTURA_N.TTF', self.menu_font_size) 
+		self.menu_font = pygame.font.Font('/home/pi/fonts/FUTURA_N.TTF', self.menu_font_size) 
 		self.menu = pygame.Surface(self.screen_size)
 		self.menu_updated = True
 		
@@ -54,7 +56,8 @@ class TFT:
 		
 		self.current_app = None
 		
-		self.btns = tftutils.BTNS(330,170)
+		#self.btns = tftutils.BTNS(330,170)
+		self.btns = tftutils.BTNS_GPIO()
 		self.btns.change += self.on_button_change
 		
 		self.screensaver = tftutils.TFTScreensaver((0,0), self.screen_size)
@@ -69,6 +72,7 @@ class TFT:
 		self.screensaver_on = True
 		
 	def on_button_change(self, dir):
+		print 'pytft::on_button_change dir: ' + str(dir)
 		self.screensaver.reset()
 		if self.screensaver_on == True:
 			self.menu_updated = True
@@ -161,7 +165,7 @@ class TFT:
 			else:
 				current_app = self.menu_array[self.menu_state]
 				self.background.blit(self.current_app.update_surface(), [0,0])
-			self.background.blit(self.btns.updateSurface(), (330,170))
+			#self.background.blit(self.btns.updateSurface(), (330,170))
 		else:
 			if self.current_app == self.fmu:
 				self.background.blit(self.current_app.update_surface(), [0,0])

@@ -12,35 +12,12 @@ import sys, pygame
 from pygame.locals import *
 import time
 
-#: Switches between development/debugging on your desktop/laptop versus running on your Raspberry Pi
-RUN_ON_RASPBERRY_PI = os.uname()[4][:3] == 'arm'
-
-# Setting up touch screen, set if statement to true on Raspberry Pi
-if RUN_ON_RASPBERRY_PI:
-    os.environ['SDL_FBDEV'] = '/dev/fb1'
-    os.environ['SDL_MOUSEDEV'] = '/dev/input/touchscreen'
-    os.environ['SDL_MOUSEDRV'] = 'TSLIB'
-
-# Display settings
-pygame.init() 	# Pygame initialization
-#: The display dimensions, change this if you have a bigger touch screen.
 DISPLAY_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = 480, 320
 PYGAME_EVENT_DELAY = 25
 
-if RUN_ON_RASPBERRY_PI:  # If started on Raspberry Pi
-    display_flags = FULLSCREEN | DOUBLEBUF | ANYFORMAT  # Turn on video acceleration
-    #: Points to the display.
-    SCREEN = pygame.display.set_mode(DISPLAY_SIZE, display_flags)
-    pygame.mouse.set_visible(False)                                 # Hide mouse cursor
-else:
-    SCREEN = pygame.display.set_mode(DISPLAY_SIZE)
-
-#: The directory where resources like button icons or the font file is stored.
 RESOURCES = os.path.dirname(__file__) + '/resources/'
 
-#: Standard font type
-FONT = pygame.font.Font('/home/jwr/fonts/FUTURA_N.TTF', 16) # pygame.font.Font(RESOURCES + 'DroidSans.ttf', 14)
-
+#FONT = pygame.font.Font('/home/pi/fonts/FUTURA_N.TTF', 16)
 
 """ Color definitions """
 BLUE = 0, 148, 255
